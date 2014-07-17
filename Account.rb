@@ -34,3 +34,7 @@ class Account
     return "Access denied: incorrect PIN."
   end
 end
+
+checking_account = Account.new("test", 10000)
+checking_account.display_balance(1234)
+checking_account.withdraw(1234,1)
