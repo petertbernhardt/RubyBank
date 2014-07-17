@@ -35,6 +35,11 @@ class Account
   end
 end
 
+puts "display and withdraw tests"
 checking_account = Account.new("test", 10000)
 checking_account.display_balance(1234)
 checking_account.withdraw(1234,1)
+
+puts "error test"
+error_account = Account.new("bad", 10)
+error_account.display_balance(1)
