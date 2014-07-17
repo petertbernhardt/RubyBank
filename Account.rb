@@ -15,7 +15,7 @@ class Account
   end
   
   def withdraw(pin_number, amount)
-    if check_pin(pin_number)
+    if check_pin(pin_number) && check_over(amount)
       @balance -= amount
       puts "Withdrew #{amount}. New balance: $#{@balance}."
     end
@@ -45,6 +45,15 @@ class Account
       false
     end    
   end
+  
+  def check_over(amount)
+    if amount > @balance
+      puts "Not enough money in account to complete the withdrawal."
+      false
+    else
+      true
+    end
+  end
 end
 
 puts "display and withdraw tests"
@@ -55,3 +64,11 @@ checking_account.withdraw(1234,1)
 puts "error test"
 error_account = Account.new("bad", 10)
 error_account.display_balance(1)
+
+puts "deposit test"
+deposit = Account.new("d")
+deposit.deposit(1234,10)
+
+puts "overdraw test"
+over = Account.new("a",10)
+over.withdraw(1234,11)
