@@ -1,0 +1,14 @@
+---
+package:
+  name: sqlite
+  version: 3.7.15.2
+  platform: x86-windows
+dependencies: []
+entries:
+- bin/sqlite3.exe
+- include/sqlite3.h
+- include/sqlite3ext.h
+- lib/libsqlite3.a
+- lib/libsqlite3.la
+- lib/pkgconfig/sqlite3.pc
+- share/man/man1/sqlite3.1

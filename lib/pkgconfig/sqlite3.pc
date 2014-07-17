@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+
+prefix=C:/Users/Luis/Code/openknapsack/knap-build/var/knapsack/software/x86-windows/sqlite/3.7.15.2
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: SQLite
+Description: SQL database engine
+Version: 3.7.15.2
+Libs: -L${libdir} -lsqlite3
+Libs.private: 
+Cflags: -I${includedir}
