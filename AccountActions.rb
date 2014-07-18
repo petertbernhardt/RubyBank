@@ -1,53 +1,49 @@
+require 'DatabaseHandler'
+
 class AccountActions
   attr_reader :name
   attr_reader :balance
   
-  def initialize(name, balance=100)
+  def initialize(name)
+    handler = DatabaseHandler.new("bank.db")
     @name = name
-    @balance = balance
-    @pin = 1234
+    @pin = handler.execute("SELECT pin FROM users WHERE name = '#{name}';")[0][0]
+    @balance = handler.execute("SELECT balance FROM accounts 
+                                JOIN users on accounts.userId = users.userId 
+                                WHERE users.name = '#{name}';")[0][0]
   end
   
   public
-  def display_balance(pin_number)
-    if check_pin(pin_number)
-      puts "Balance: $#{balance}."
-    end
+  def display_balance
+    puts "Balance: $#{balance}."
   end
   
-  def withdraw(pin_number, amount)
-    if check_pin(pin_number) && check_over(amount)
+  def withdraw(amount)
+    if amount.is_a? Integer && check_over(amount)  && amount > 0
       @balance -= amount
       puts "Withdrew #{amount}. New balance: $#{@balance}."
     end
   end
   
-  def deposit(pin_number, amount)
-    if check_pin(pin_number)
+  def deposit(amount)
+    if amount.is_a? Integer && amount > 0
       @balance += amount
       puts "Deposited #{amount}. New balance: $#{@balance}."
     end
   end
   
   def changePin(newPin)
-    # do stuff here
-    @pin = newPin
-    puts "Pin changed to #{@pin}"
+    if newPin.is_a? Integer 
+      @pin = newPin
+      puts "Pin changed to #{@pin}"
+    else
+      puts "Input was not a number"
+    end
   end
   
   private
-  
   def pin_error
     return "Access denied: incorrect PIN."
-  end
-  
-  def check_pin(pin_number)
-    if pin_number == @pin
-      true
-    else
-      puts pin_error
-      false
-    end    
   end
   
   def check_over(amount)
