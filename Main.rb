@@ -9,5 +9,9 @@ class Main
   query = "SELECT name, pin FROM users 
             WHERE name = '#{name}' AND pin = #{pin}"
   data = handler.execute(query)
-  puts data
+  if data.size == 0
+    puts "User not found"
+  else
+    puts data
+  end
 end
