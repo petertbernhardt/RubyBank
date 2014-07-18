@@ -13,7 +13,9 @@ class DatabaseHandler
 end
 
 handler = DatabaseHandler.new("bank.db")
-handler.execute("INSERT INTO users (name, pin) 
-                 VALUES ('Peter', 1992)")
-rows = handler.execute("SELECT * FROM users")
-puts rows
+# peter
+# handler.execute("INSERT INTO users VALUES (1, 'Peter', 1992);")
+# handler.execute("INSERT INTO accounts VALUES (1, 100, 1);")
+# seth
+# handler.execute("INSERT INTO users VALUES (2, 'Seth', 666);")
+# handler.execute("INSERT INTO accounts VALUES (2, 666, 2);")                                  
