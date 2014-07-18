@@ -27,9 +27,13 @@ class Main
       when "d"
         account.display_balance
       when "w"
-        puts "Withdraw"
+        puts "How much would you like to withdraw? "
+        amount = gets.to_i
+        account.withdraw(amount)
       when "e"
-        puts "Deposit"
+        puts "How much would you like to deposit? "
+        amount = gets.to_i
+        account.deposit(amount)
       when "c"
         puts "Change Pin"
     end

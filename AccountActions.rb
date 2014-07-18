@@ -5,10 +5,10 @@ class AccountActions
   attr_reader :balance
   
   def initialize(name)
-    handler = DatabaseHandler.new("bank.db")
+    @handler = DatabaseHandler.new("bank.db")
     @name = name
-    @pin = handler.execute("SELECT pin FROM users WHERE name = '#{name}';")[0][0]
-    @balance = handler.execute("SELECT balance FROM accounts 
+    @pin = @handler.execute("SELECT pin FROM users WHERE name = '#{name}';")[0][0]
+    @balance = @handler.execute("SELECT balance FROM accounts 
                                 JOIN users on accounts.userId = users.userId 
                                 WHERE users.name = '#{name}';")[0][0]
   end
@@ -19,21 +19,26 @@ class AccountActions
   end
   
   def withdraw(amount)
-    if amount.is_a? Integer && check_over(amount)  && amount > 0
+    if amount.is_a?(Integer) && check_over(amount)  && amount > 0
       @balance -= amount
+      @handler.execute("UPDATE accounts
+                        SET balance = #{@balance} 
+                        WHERE userId IN
+                        (SELECT userId from users
+                        WHERE name = '#{@name}';")
       puts "Withdrew #{amount}. New balance: $#{@balance}."
     end
   end
   
   def deposit(amount)
-    if amount.is_a? Integer && amount > 0
+    if amount.is_a?(Integer) && amount > 0
       @balance += amount
       puts "Deposited #{amount}. New balance: $#{@balance}."
     end
   end
   
   def changePin(newPin)
-    if newPin.is_a? Integer 
+    if newPin.is_a?(Integer) 
       @pin = newPin
       puts "Pin changed to #{@pin}"
     else
