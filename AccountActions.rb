@@ -1,4 +1,4 @@
-class Account
+class AccountActions
   attr_reader :name
   attr_reader :balance
   
@@ -26,6 +26,10 @@ class Account
       @balance += amount
       puts "Deposited #{amount}. New balance: $#{@balance}."
     end
+  end
+  
+  def changePin(newPin)
+    # do stuff here
   end
   
   private
@@ -57,18 +61,18 @@ class Account
 end
 
 puts "display and withdraw tests"
-checking_account = Account.new("test", 10000)
+checking_account = AccountActions.new("test", 10000)
 checking_account.display_balance(1234)
 checking_account.withdraw(1234,1)
 
 puts "error test"
-error_account = Account.new("bad", 10)
+error_account = AccountActions.new("bad", 10)
 error_account.display_balance(1)
 
 puts "deposit test"
-deposit = Account.new("d")
+deposit = AccountActions.new("d")
 deposit.deposit(1234,10)
 
 puts "overdraw test"
-over = Account.new("a",10)
+over = AccountActions.new("a",10)
 over.withdraw(1234,11)
