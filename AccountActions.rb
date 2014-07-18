@@ -5,6 +5,7 @@ class AccountActions
   def initialize(name, balance=100)
     @name = name
     @balance = balance
+    @pin = 1234
   end
   
   public
@@ -30,19 +31,18 @@ class AccountActions
   
   def changePin(newPin)
     # do stuff here
+    @pin = newPin
+    puts "Pin changed to #{@pin}"
   end
   
   private
-  def pin
-    @pin = 1234
-  end
   
   def pin_error
     return "Access denied: incorrect PIN."
   end
   
   def check_pin(pin_number)
-    if pin_number == pin
+    if pin_number == @pin
       true
     else
       puts pin_error
@@ -60,6 +60,7 @@ class AccountActions
   end
 end
 
+=begin
 puts "display and withdraw tests"
 checking_account = AccountActions.new("test", 10000)
 checking_account.display_balance(1234)
@@ -76,3 +77,8 @@ deposit.deposit(1234,10)
 puts "overdraw test"
 over = AccountActions.new("a",10)
 over.withdraw(1234,11)
+
+puts "change pin test"
+test = AccountActions.new("a")
+test.changePin(1)
+=end
