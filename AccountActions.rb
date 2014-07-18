@@ -24,8 +24,8 @@ class AccountActions
       @handler.execute("UPDATE accounts
                         SET balance = #{@balance} 
                         WHERE userId IN
-                        (SELECT userId from users
-                        WHERE name = '#{@name}';")
+                        (SELECT userId FROM users
+                        WHERE name = '#{@name}');")
       puts "Withdrew #{amount}. New balance: $#{@balance}."
     end
   end
@@ -33,6 +33,11 @@ class AccountActions
   def deposit(amount)
     if amount.is_a?(Integer) && amount > 0
       @balance += amount
+      @handler.execute("UPDATE accounts
+                        SET balance = #{@balance}
+                        WHERE userId IN
+                        (SELECT userId FROM users
+                        WHERE name = '#{@name}');")
       puts "Deposited #{amount}. New balance: $#{@balance}."
     end
   end
@@ -40,10 +45,57 @@ class AccountActions
   def changePin(newPin)
     if newPin.is_a?(Integer) 
       @pin = newPin
+      @handler.execute("UPDATE users 
+                        SET pin = #{@pin} 
+                        WHERE name = '#{@name}';")
       puts "Pin changed to #{@pin}"
     else
-      puts "Input was not a number"
+      puts "Input was not a valid number"
     end
+  end
+  
+  def transfer(person)
+    otherBalance = @handler.execute("SELECT balance FROM accounts 
+                                    JOIN users on accounts.userId = users.userId 
+                                    WHERE users.name = '#{person}';")
+    if otherBalance.size != 0
+      otherBalance = otherBalance[0][0]
+      puts "How much would you like to transfer to #{person}'s account? "
+      amount = gets.to_i
+      if check_over(amount) && amount > 0
+        # everything is good, transfer!
+        puts "Are you sure you want to transfer #{amount} to #{person}'s account? Y/N "
+        choice = gets.chomp.downcase[0]
+        if choice == "y"
+          @balance -= amount
+          otherBalance += amount
+          @handler.execute("UPDATE accounts 
+                            SET balance = #{@balance} 
+                            WHERE userId IN 
+                            (SELECT userId FROM users 
+                            WHERE name = '#{@name}');")
+          @handler.execute("UPDATE accounts 
+                            SET balance = #{otherBalance} 
+                            WHERE userId IN 
+                            (SELECT userId FROM users 
+                            WHERE name = '#{person}');")
+          puts "Transferred #{amount} to #{person}'s account."
+          puts "Your new balance is #{@balance}."
+        else
+          transfer(person)
+        end
+      end
+    else
+      puts "We're sorry, but #{person} doesn't have an account with us."
+    end
+  end
+  
+  def setBal(amount)
+    @balance = amount
+  end
+  
+  def setPin(pin)
+    @pin = pin
   end
   
   private
